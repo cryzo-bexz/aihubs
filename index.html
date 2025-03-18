@@ -3,56 +3,108 @@
 <head>
     <title>Anime AI Hub</title>
     <style>
+        /* Anime Cyberpunk Style */
+        :root {
+            --neon-pink: #ff69b4;
+            --cyber-purple: #9d4edd;
+            --dark-bg: #0a0a1a;
+            --matrix-green: #00ff9d;
+        }
+
         body {
             margin: 0;
             height: 100vh;
-            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-            background-size: 400% 400%;
-            animation: gradient 15s ease infinite;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            background: 
+                linear-gradient(
+                    45deg,
+                    var(--dark-bg) 25%,
+                    #1a1a2e 100%
+                ),
+                repeating-linear-gradient(
+                    45deg,
+                    var(--neon-pink) 0px,
+                    var(--neon-pink) 2px,
+                    transparent 2px,
+                    transparent 4px
+                );
+            background-blend-mode: multiply;
+            color: white;
             font-family: 'Arial', sans-serif;
+            overflow: hidden;
         }
 
-        @keyframes gradient {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+        .glow {
+            text-shadow: 0 0 10px var(--neon-pink),
+                         0 0 20px var(--neon-pink),
+                         0 0 30px var(--neon-pink);
         }
 
         .container {
-            text-align: center;
-            backdrop-filter: blur(10px);
-            padding: 40px;
-            border-radius: 20px;
-            background: rgba(255,255,255,0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            backdrop-filter: blur(5px);
         }
 
-        .anime-btn {
+        .cyber-button {
             padding: 15px 30px;
-            margin: 15px;
-            border: none;
-            border-radius: 25px;
-            background: rgba(255,105,180,0.7);
+            margin: 20px;
+            background: rgba(0,0,0,0.5);
+            border: 2px solid var(--neon-pink);
             color: white;
             font-size: 1.2em;
             cursor: pointer;
             transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            border-radius: 5px;
         }
 
-        .anime-btn:hover {
-            background: rgba(255,105,180,1);
-            transform: scale(1.1);
-            box-shadow: 0 0 20px #ff69b4;
+        .cyber-button::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent,
+                var(--neon-pink),
+                transparent
+            );
+            animation: scan 3s linear infinite;
+        }
+
+        @keyframes scan {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        .cyber-button:hover {
+            background: rgba(255,105,180,0.2);
+            box-shadow: 0 0 20px var(--neon-pink);
+        }
+
+        /* Hologram Effect */
+        .hologram {
+            position: relative;
+            padding: 30px;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid var(--neon-pink);
+            box-shadow: 0 0 30px rgba(255,105,180,0.2);
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1 style="color: white;">Anime AI Hub</h1>
-        <button class="anime-btn" onclick="location.href='/create.html'">Create Character</button>
-        <button class="anime-btn" onclick="location.href='/import.html'">Import Character</button>
+        <div class="hologram">
+            <h1 class="glow">Anime AI Hub</h1>
+            <button class="cyber-button" onclick="location.href='/create.html'">Create Character</button>
+            <button class="cyber-button" onclick="location.href='/import.html'">Import Character</button>
+        </div>
     </div>
 </body>
 </html>
