@@ -1,110 +1,133 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Anime AI Hub</title>
+    <title>Chat Interface</title>
     <style>
-        /* Anime Cyberpunk Style */
-        :root {
-            --neon-pink: #ff69b4;
-            --cyber-purple: #9d4edd;
-            --dark-bg: #0a0a1a;
-            --matrix-green: #00ff9d;
-        }
-
+        /* Neon Chat Interface */
         body {
             margin: 0;
             height: 100vh;
             background: 
                 linear-gradient(
                     45deg,
-                    var(--dark-bg) 25%,
-                    #1a1a2e 100%
+                    #1a1a2e,
+                    #0a0a1a
                 ),
                 repeating-linear-gradient(
                     45deg,
-                    var(--neon-pink) 0px,
-                    var(--neon-pink) 2px,
+                    transparent 0px,
                     transparent 2px,
-                    transparent 4px
+                    #ff69b4 2px,
+                    #ff69b4 4px
                 );
             background-blend-mode: multiply;
-            color: white;
-            font-family: 'Arial', sans-serif;
-            overflow: hidden;
-        }
-
-        .glow {
-            text-shadow: 0 0 10px var(--neon-pink),
-                         0 0 20px var(--neon-pink),
-                         0 0 30px var(--neon-pink);
-        }
-
-        .container {
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            backdrop-filter: blur(5px);
+            font-family: 'Arial', sans-serif;
+            color: white;
         }
 
-        .cyber-button {
-            padding: 15px 30px;
-            margin: 20px;
+        .chat-container {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            max-width: 800px;
+            margin: 0 auto;
+            width: 95%;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 15px;
+            border-radius: 10px;
+            display: flex;
+            gap: 10px;
+            animation: messageAppear 0.3s ease;
             background: rgba(0,0,0,0.5);
-            border: 2px solid var(--neon-pink);
+            border: 1px solid #ff69b4;
+        }
+
+        .user-message {
+            margin-left: auto;
+            background: rgba(255,105,180,0.1);
+            border-color: #9d4edd;
+        }
+
+        .ai-message {
+            margin-right: auto;
+            background: rgba(106, 90, 205, 0.1);
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #ff69b4;
+        }
+
+        .input-box {
+            padding: 15px;
+            background: rgba(0,0,0,0.7);
+            display: flex;
+            gap: 10px;
+            max-width: 800px;
+            margin: 0 auto 20px;
+            width: 95%;
+            border: 1px solid #ff69b4;
+            border-radius: 10px;
+        }
+
+        #message-input {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            background: rgba(255,255,255,0.1);
             color: white;
-            font-size: 1.2em;
+            font-size: 16px;
+        }
+
+        #send-btn {
+            background: #ff69b4;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
             cursor: pointer;
             transition: all 0.3s;
-            position: relative;
-            overflow: hidden;
-            border-radius: 5px;
         }
 
-        .cyber-button::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(
-                45deg,
-                transparent,
-                var(--neon-pink),
-                transparent
-            );
-            animation: scan 3s linear infinite;
+        #send-btn:hover {
+            background: #ff1493;
+            box-shadow: 0 0 15px #ff69b4;
         }
 
-        @keyframes scan {
-            0% { transform: translate(-50%, -50%) rotate(0deg); }
-            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        @keyframes messageAppear {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .cyber-button:hover {
-            background: rgba(255,105,180,0.2);
-            box-shadow: 0 0 20px var(--neon-pink);
-        }
-
-        /* Hologram Effect */
-        .hologram {
-            position: relative;
-            padding: 30px;
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 8px;
             background: rgba(0,0,0,0.3);
-            border: 1px solid var(--neon-pink);
-            box-shadow: 0 0 30px rgba(255,105,180,0.2);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #ff69b4;
+            border-radius: 4px;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="hologram">
-            <h1 class="glow">Anime AI Hub</h1>
-            <button class="cyber-button" onclick="location.href='/create.html'">Create Character</button>
-            <button class="cyber-button" onclick="location.href='/import.html'">Import Character</button>
-        </div>
+    <div class="chat-container" id="chatBox"></div>
+    <div class="input-box">
+        <input type="text" id="message-input" placeholder="Type your message..." autocomplete="off">
+        <button id="send-btn" onclick="sendMessage()">Send</button>
     </div>
 </body>
 </html>
