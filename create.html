@@ -3,92 +3,102 @@
 <head>
     <title>Create Character</title>
     <style>
+        /* Cyberpunk Creation Theme */
         body {
             margin: 0;
             height: 100vh;
-            background: linear-gradient(45deg, #1a1a2e, #16213e);
+            background: 
+                radial-gradient(
+                    circle at 50% 50%,
+                    #1a1a2e,
+                    #0a0a1a
+                ),
+                repeating-linear-gradient(
+                    45deg,
+                    var(--neon-pink) 0px,
+                    var(--neon-pink) 2px,
+                    transparent 2px,
+                    transparent 4px
+                );
+            background-blend-mode: multiply;
             display: flex;
             justify-content: center;
             align-items: center;
             font-family: 'Arial', sans-serif;
+            color: white;
         }
 
-        .creation-box {
-            background: rgba(255,255,255,0.1);
+        .creation-panel {
+            background: rgba(0,0,0,0.7);
             padding: 30px;
-            border-radius: 20px;
-            backdrop-filter: blur(10px);
-            border: 2px solid #ff69b4;
+            border: 2px solid var(--neon-pink);
+            border-radius: 10px;
             width: 400px;
+            box-shadow: 0 0 40px rgba(255,105,180,0.3);
         }
 
-        input, textarea {
+        .input-field {
+            margin: 15px 0;
+        }
+
+        .input-field label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--neon-pink);
+        }
+
+        .input-field input,
+        .input-field textarea {
             width: 100%;
-            padding: 12px;
-            margin: 10px 0;
+            padding: 10px;
             background: rgba(255,255,255,0.1);
-            border: 1px solid #ff69b4;
-            border-radius: 8px;
+            border: 1px solid var(--neon-pink);
             color: white;
+            border-radius: 5px;
+            transition: all 0.3s;
         }
 
-        button {
-            background: #ff69b4;
+        .input-field input:focus,
+        .input-field textarea:focus {
+            outline: none;
+            box-shadow: 0 0 10px var(--neon-pink);
+        }
+
+        #create-btn {
+            background: var(--neon-pink);
             color: white;
-            padding: 15px 30px;
+            padding: 12px 24px;
             border: none;
-            border-radius: 25px;
+            border-radius: 5px;
             width: 100%;
             cursor: pointer;
             font-size: 1.1em;
-            transition: transform 0.3s;
+            transition: all 0.3s;
+            margin-top: 15px;
         }
 
-        button:hover {
-            transform: scale(1.05);
+        #create-btn:hover {
+            background: #ff1493;
+            box-shadow: 0 0 20px var(--neon-pink);
         }
     </style>
 </head>
 <body>
-    <div class="creation-box">
-        <h2 style="color: white; text-align: center;">Create Your Character</h2>
-        <input type="text" placeholder="Character Name" id="charName">
-        <input type="file" id="charAvatar" accept="image/*">
-        <textarea placeholder="Character Description" id="charDesc" rows="4"></textarea>
-        <button onclick="createCharacter()">Bring to Life!</button>
+    <div class="creation-panel">
+        <h2 style="text-align: center; color: var(--neon-pink)">Create New Character</h2>
+        <div class="input-field">
+            <label>Character Name</label>
+            <input type="text" id="charName">
+        </div>
+        <div class="input-field">
+            <label>Avatar</label>
+            <input type="file" id="charAvatar" accept="image/*">
+        </div>
+        <div class="input-field">
+            <label>Description</label>
+            <textarea id="charDesc" rows="4"></textarea>
+        </div>
+        <button id="create-btn" onclick="createCharacter()">Generate Character</button>
     </div>
-
-    <script>
-        async function createCharacter() {
-            const name = document.getElementById('charName').value;
-            const desc = document.getElementById('charDesc').value;
-            const avatar = document.getElementById('charAvatar').files[0];
-
-            if(!name || !desc) {
-                alert('Please fill all required fields!');
-                return;
-            }
-
-            // Convert image to Base64
-            let avatarBase64 = '';
-            if(avatar) {
-                avatarBase64 = await new Promise((resolve) => {
-                    const reader = new FileReader();
-                    reader.onload = (e) => resolve(e.target.result);
-                    reader.readAsDataURL(avatar);
-                });
-            }
-
-            // Store in localStorage
-            const character = {
-                name: name,
-                description: desc,
-                avatar: avatarBase64
-            };
-
-            localStorage.setItem('currentCharacter', JSON.stringify(character));
-            window.location.href = '/chat.html';
-        }
-    </script>
 </body>
 </html>
