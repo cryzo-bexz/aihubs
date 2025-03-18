@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Character</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            background: linear-gradient(45deg, #1a1a2e, #16213e);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .creation-box {
+            background: rgba(255,255,255,0.1);
+            padding: 30px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 2px solid #ff69b4;
+            width: 400px;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid #ff69b4;
+            border-radius: 8px;
+            color: white;
+        }
+
+        button {
+            background: #ff69b4;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 25px;
+            width: 100%;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: transform 0.3s;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="creation-box">
+        <h2 style="color: white; text-align: center;">Create Your Character</h2>
+        <input type="text" placeholder="Character Name" id="charName">
+        <input type="file" id="charAvatar" accept="image/*">
+        <textarea placeholder="Character Description" id="charDesc" rows="4"></textarea>
+        <button onclick="createCharacter()">Bring to Life!</button>
+    </div>
+
+    <script>
+        async function createCharacter() {
+            const name = document.getElementById('charName').value;
+            const desc = document.getElementById('charDesc').value;
+            const avatar = document.getElementById('charAvatar').files[0];
+
+            if(!name || !desc) {
+                alert('Please fill all required fields!');
+                return;
+            }
+
+            // Convert image to Base64
+            let avatarBase64 = '';
+            if(avatar) {
+                avatarBase64 = await new Promise((resolve) => {
+                    const reader = new FileReader();
+                    reader.onload = (e) => resolve(e.target.result);
+                    reader.readAsDataURL(avatar);
+                });
+            }
+
+            // Store in localStorage
+            const character = {
+                name: name,
+                description: desc,
+                avatar: avatarBase64
+            };
+
+            localStorage.setItem('currentCharacter', JSON.stringify(character));
+            window.location.href = '/chat.html';
+        }
+    </script>
+</body>
+</html>
