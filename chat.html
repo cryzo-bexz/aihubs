@@ -15,20 +15,25 @@
 
         .chat-container {
             flex: 1;
-            padding: 20px;
+            padding: 10px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 8px;
+            max-width: 800px;
+            margin: 0 auto;
+            width: 95%;
         }
 
         .message {
-            max-width: 70%;
-            padding: 15px;
-            border-radius: 15px;
+            max-width: 80%;
+            padding: 10px;
+            border-radius: 10px;
             display: flex;
-            gap: 15px;
+            gap: 10px;
             animation: fadeIn 0.3s ease;
+            font-size: 0.9em;
+            line-height: 1.4;
         }
 
         .user {
@@ -39,55 +44,86 @@
 
         .ai {
             background: rgba(106, 90, 205, 0.2);
+            margin-right: auto;
         }
 
         .avatar {
-            width: 40px;
-            height: 40px;
+            width: 30px;
+            height: 30px;
+            min-width: 30px;
             border-radius: 50%;
             object-fit: cover;
         }
 
         .input-container {
-            padding: 20px;
+            padding: 10px;
             background: rgba(0,0,0,0.3);
             display: flex;
-            gap: 10px;
+            gap: 8px;
+            max-width: 800px;
+            margin: 0 auto;
+            width: 95%;
         }
 
         input {
             flex: 1;
-            padding: 15px;
+            padding: 10px;
             border: none;
-            border-radius: 25px;
+            border-radius: 20px;
             background: rgba(255,255,255,0.1);
             color: white;
+            font-size: 0.9em;
         }
 
         button {
-            padding: 15px 25px;
+            padding: 10px 20px;
             background: #ff69b4;
             border: none;
-            border-radius: 25px;
+            border-radius: 20px;
             color: white;
             cursor: pointer;
+            font-size: 0.9em;
+        }
+
+        .typing-indicator {
+            display: none;
+            padding: 5px 10px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            margin: 5px auto;
+            font-size: 0.8em;
+            color: #888;
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
+            from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .message {
+                max-width: 90%;
+                padding: 8px;
+                font-size: 0.8em;
+            }
+            .avatar {
+                width: 25px;
+                height: 25px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="chat-container" id="chatBox"></div>
+    <div class="typing-indicator" id="typing">AI is typing...</div>
     
     <div class="input-container">
-        <input type="text" id="userInput" placeholder="Type your message..." autocomplete="off">
+        <input type="text" id="userInput" placeholder="Type message..." autocomplete="off">
         <button onclick="sendMessage()">Send</button>
     </div>
 
     <script>
+        const API_ENDPOINT = 'https://handler999.vercel.app/api/chat';
         const character = JSON.parse(localStorage.getItem('currentCharacter')) || {
             name: 'AI',
             avatar: 'https://api.dicebear.com/7.x/bottts-neutral/svg?seed=AI&backgroundColor=ff69b4'
@@ -101,10 +137,12 @@
             // Add user message
             addMessage(message, 'user');
             input.value = '';
-
+            
             try {
-                // Get AI response
-                const response = await fetch('https://handler999.vercel.app/api/chat', {
+                // Show typing indicator
+                document.getElementById('typing').style.display = 'block';
+                
+                const response = await fetch(API_ENDPOINT, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -117,12 +155,19 @@
                     })
                 });
 
+                if(!response.ok) throw new Error(`API Error: ${response.status}`);
+                
                 const data = await response.json();
+                
                 if(data.choices?.[0]?.message?.content) {
                     addMessage(data.choices[0].message.content, 'ai');
+                } else {
+                    throw new Error('No response from AI');
                 }
             } catch (error) {
-                console.error('Error:', error);
+                addMessage(`Error: ${error.message}`, 'error');
+            } finally {
+                document.getElementById('typing').style.display = 'none';
             }
         }
 
